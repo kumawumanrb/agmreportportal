@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Downloading…</title>
+  <link rel="stylesheet" href="../styles.css" />
+  <!-- Analytics -->
+  <!-- Privacy-friendly analytics by Plausible -->
+  <script async src="https://plausible.io/js/pa-8FUa_Pb-8M4byZGixRrq7.js"></script>
+  <script>
+    window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+    plausible.init()
+  </script>
+</head>
+<body>
+  <main class="container card">
+    <h2>Preparing your download…</h2>
+    <p class="muted" id="msg">Please wait.</p>
+  </main>
+
+  <script>
+    // Accept either:
+    // 1) ?url=https://...pdf  (direct URL)
+    // 2) ?k=KRB-AGM-2025      (look up in reports.json)
+    function getParam(name) {
+      const u = new URL(location.href);
+      return u.searchParams.get(name);
+    }
+    function firePlausible(label, url) {
+      try {
+        if (typeof plausible === "function") {
+          plausible("ReportDownload", { props: { label, url } });
+        }
+      } catch (_) {}
+    }
+
+    (async function () {
+      const msg = document.getElementById("msg");
+      let url = getParam("url");
+      const code = getParam("k");
+
+      try {
+        if (!url && code) {
+          const res = await fetch("../reports.json", { cache: "no-store" });
+          if (!res.ok) throw new Error("Lookup failed");
+          const map = await res.json();
+          const entry = map[code];
+          if (!entry) throw new Error("Unknown code");
+          url = typeof entry === "string" ? entry : entry.url;
+        }
+        if (!url) throw new Error("Missing ?url= or ?k=");
+        // Send event, then navigate after ~120ms
+        firePlausible(code ? `qr:${code}` : "qr:direct-url", url);
+        setTimeout(() => { location.href = url; }, 120);
+        msg.textContent = "Redirecting to your PDF…";
+      } catch (e) {
+        msg.textContent = "Sorry, we couldn't find that file.";
+      }
+    })();
+  </script>
+</body>
+</html>

@@ -39,14 +39,29 @@ async function lookupReport(codeRaw) {
     : { title: entry.title || code, url: entry.url };
 }
 
+// function renderSuccess({ title, url }) {
+//   hide("error");
+//   show("result", `
+//     <h2>Report Found</h2>
+//     <p><strong>${title}</strong></p>
+//     <a class="btn" href="${url}" download>Download 2025 Report</a>
+//     <a class="btn btn-secondary" href="${url}" target="_blank" rel="noopener">Open 2025 Report</a>
+//   `);
+// }
+
 function renderSuccess({ title, url }) {
   hide("error");
   show("result", `
     <h2>Report Found</h2>
     <p><strong>${title}</strong></p>
-    <a class="btn" href="${url}" download>Download 2025 Report</a>
-    <a class="btn btn-secondary" href="${url}" target="_blank" rel="noopener">Open 2025 Report</a>
+    <a class="btn" href="${url}" id="btn-download">Download 2024 Report</a>
+    <a class="btn btn-secondary" href="${url}" id="btn-open" target="_blank" rel="noopener">Open 2024 Report</a>
   `);
+
+  const d = document.getElementById("btn-download");
+  const o = document.getElementById("btn-open");
+  if (d) d.addEventListener("click", (e) => trackAndGo(e, d.href, `download:${title}`));
+  if (o) o.addEventListener("click", (e) => trackAndGo(e, o.href, `open:${title}`));
 }
 
 function renderError(message) {
@@ -114,6 +129,9 @@ document.addEventListener("DOMContentLoaded", () => {
   latestBtn.href = LATEST_PDF_URL;
   latestOpen.href = LATEST_PDF_URL;
 
+  if (latestBtn) latestBtn.addEventListener("click", (e) => trackAndGo(e, latestBtn.href, "download:latest"));
+  if (latestOpen) latestOpen.addEventListener("click", (e) => trackAndGo(e, latestOpen.href, "open:latest"));
+
   // Scanner controls
   document.getElementById("start-scan").addEventListener("click", startScanner);
   document.getElementById("stop-scan").addEventListener("click", stopScanner);
@@ -134,3 +152,16 @@ document.addEventListener("DOMContentLoaded", () => {
     navigator.serviceWorker.register("service-worker.js").catch(() => {});
   }
 });
+
+function trackAndGo(evt, url, label) {
+  // allow analytics to capture before navigation
+  evt.preventDefault();
+  try {
+    // Plausible custom event
+    if (typeof plausible === "function") {
+      plausible("ReportDownload", { props: { label, url } });
+    }
+  } catch (_) {}
+  // small delay to ensure the event is sent, then navigate
+  setTimeout(() => { window.location.href = url; }, 120);
+}
