@@ -79,8 +79,18 @@ async function startScanner() {
   status.textContent = "Initializing camera…";
 
   try {
+    // Dynamically size the QR box based on viewport
+    const vw = Math.min(window.innerWidth, 520);
+    const vh = window.innerHeight;
+    // leave some breathing room; pick the smaller of vw/vh minus padding
+    const size = Math.max(180, Math.min(vw - 40, vh - 240));
+
     html5Qrcode = new Html5Qrcode("reader");
-    const config = { fps: 10, qrbox: { width: 280, height: 280 }, rememberLastUsedCamera: true };
+    const config = {
+      fps: 10,
+      qrbox: { width: size, height: size },
+      rememberLastUsedCamera: true
+    };
 
     await html5Qrcode.start(
       { facingMode: "environment" },
@@ -93,16 +103,15 @@ async function startScanner() {
         } catch (e) {
           renderError(e.message || "Failed to resolve code.");
         } finally {
-          stopScanner(); // stop after first read
+          stopScanner();
         }
       }
     );
 
     status.textContent = "Point your camera at the QR code.";
   } catch (e) {
-    document.getElementById("start-scan").disabled = false;
-    document.getElementById("stop-scan").disabled = true;
-    renderError("Unable to start camera. Please allow permissions or use the manual code.");
+    startBtn.disabled = false; stopBtn.disabled = true;
+    renderError("Unable to start camera. Please allow permissions or try manual code.");
     status.textContent = "Camera failed to start.";
   }
 }
@@ -163,5 +172,5 @@ function trackAndGo(evt, url, label) {
     }
   } catch (_) {}
   // small delay to ensure the event is sent, then navigate
-  setTimeout(() => { window.location.href = url; }, 120);
+  setTimeout(() => { window.location.href = url; }, 300);
 }

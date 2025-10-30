@@ -53,7 +53,7 @@
         if (!url) throw new Error("Missing ?url= or ?k=");
         // Send event, then navigate after ~120ms
         firePlausible(code ? `qr:${code}` : "qr:direct-url", url);
-        setTimeout(() => { location.href = url; }, 120);
+        setTimeout(() => { location.href = url; }, 300);
         msg.textContent = "Redirecting to your PDF…";
       } catch (e) {
         msg.textContent = "Sorry, we couldn't find that file.";
