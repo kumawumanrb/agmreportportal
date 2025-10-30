@@ -1,0 +1,11 @@
+{
+  "name": "KRB AGM Report",
+  "short_name": "KRB AGM",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#06110b",
+  "theme_color": "#0f5132",
+  "icons": [
+    { "src": "assets/logo.png", "sizes": "192x192", "type": "image/png" }
+  ]
+}

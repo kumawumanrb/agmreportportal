@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Kumawuman Rural Bank • AGM Report Download</title>
+  <meta name="theme-color" content="#0f5132">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="assets/logo.png">
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://unpkg.com/html5-qrcode" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header class="container header">
+    <img class="logo" src="assets/logo.png" alt="KRB Logo" />
+    <div>
+      <h1>Kumawuman Rural Bank</h1>
+      <p class="subtle">AGM Report Download Portal</p>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="card highlight">
+      <h2>Get the Latest Report</h2>
+      <p>Tap the button below to download the most recent AGM report PDF.</p>
+      <a id="download-latest" class="btn" href="#" download>Download 2025 Report</a>
+      <a id="open-latest" class="btn btn-secondary" href="#" target="_blank" rel="noopener">Open 2025 Report</a>
+    </section>
+
+    <!-- <section class="card">
+      <h2>Scan QR Code</h2>
+      <div id="scanner-area">
+        <div id="reader"></div>
+        <div class="controls">
+          <button id="start-scan" class="btn">Start Camera</button>
+          <button id="stop-scan" class="btn btn-secondary" disabled>Stop</button>
+        </div>
+        <p id="scan-status" class="muted">Camera is idle.</p>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Or Enter Code Manually</h2>
+      <div class="row">
+        <input id="manual-code" type="text" placeholder="e.g., KRB-AGM-2025" />
+        <button id="go-manual" class="btn">Find Report</button>
+      </div>
+      <p class="muted">Codes map to PDFs defined in <code>reports.json</code>.</p>
+    </section> -->
+
+    <!-- <section id="result" class="card hidden"></section> -->
+    <!-- <section id="error" class="card error hidden"></section> -->
+  </main>
+
+  <footer class="container footer">
+    <small class="text-center">© <span id="year"></span> Kumawuman Rural Bank PLC • Powered by KRB IT Department • Hosted on GitHub Pages</small>
+  </footer>
+</body>
+</html>
